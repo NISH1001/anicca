@@ -1,0 +1,11 @@
+# local, untracked personal config (if you add one)
+config.local.js
+
+# local preview / verification artifacts
+.playwright-mcp/
+
+# os / editor cruft
+.DS_Store
+*.log
+.vscode/
+.idea/
