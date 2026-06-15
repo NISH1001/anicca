@@ -130,7 +130,7 @@
     body: document.body,
     eyebrow: $('eyebrow'), numInt: $('numInt'), numFrac: $('numFrac'),
     unit: $('unit'), sub: $('sub'), line: $('line'),
-    lived: $('lived'), nowMark: $('nowMark'),
+    lived: $('lived'), nowMark: $('nowMark'), ageMark: $('ageMark'),
     originLabel: $('originLabel'), horizonLabel: $('horizonLabel'),
     breathLbl: $('breathLbl'),
     lenses: $('lenses'),
@@ -162,10 +162,18 @@
     // lifeline
     const span = m.horizon - m.origin;
     const frac = clampNum((now - m.origin) / span, 0, 1);
-    el.lived.style.width = (frac * 100).toFixed(3) + '%';
-    el.nowMark.style.left = (frac * 100).toFixed(3) + '%';
+    const pct = (frac * 100).toFixed(3) + '%';
+    el.lived.style.width = pct;
+    el.nowMark.style.left = pct;
     el.originLabel.textContent = new Date(m.origin).getFullYear();
     el.horizonLabel.textContent = new Date(m.horizon).getFullYear();
+
+    // your age right now — lens-independent; many decimals so it visibly streams
+    if (el.ageMark) {
+      const ageYears = Math.max(0, (now - ageDate(cfg.youBorn, 0)) / (YEAR_DAYS * DAY_MS));
+      el.ageMark.style.left = pct;
+      el.ageMark.textContent = Math.floor(ageYears) + '.' + (ageYears % 1).toFixed(9).slice(2);
+    }
   }
 
   // ---------- the field: motes that arise and pass ----------

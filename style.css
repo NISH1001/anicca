@@ -245,6 +245,22 @@ body {
   box-shadow: 0 0 20px 3px var(--accent), 0 0 6px var(--accent);
   animation: pulse 3.4s ease-in-out infinite;
 }
+.lifeline__age {
+  /* your age, now — pinned above the moving now-dot; streams to feel time pass */
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 9px);
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  opacity: 0.82;
+  white-space: nowrap;
+  text-shadow: 0 0 10px var(--accent-soft);
+  pointer-events: none;
+}
 .lifeline__labels {
   display: flex;
   justify-content: space-between;
