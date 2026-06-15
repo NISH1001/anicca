@@ -4,6 +4,9 @@ config.local.js
 # local preview / verification artifacts
 .playwright-mcp/
 
+# web-ext build/sign output
+web-ext-artifacts/
+
 # os / editor cruft
 .DS_Store
 *.log

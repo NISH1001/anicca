@@ -35,16 +35,26 @@ root engine, re-sync:
 cp ../style.css ../anicca.js .
 ```
 
-## Before submitting to addons.mozilla.org (AMO)
+## Packaging & submitting
 
-This first cut loads fonts from Google Fonts over the network (allowed in Firefox
-extension pages, and fine for `about:debugging`). For a store release we should:
+Fonts are **bundled locally** (`fonts.css` + `fonts/*.woff2`, latin `Fraunces` +
+`IBM Plex Mono`), so the new tab is fully offline and the manifest CSP has no
+remote sources. Build / sign / package with `./package.sh` (see repo root) or:
 
-- **Bundle the fonts locally** (`Fraunces`, `IBM Plex Mono`) as `woff2` + a local
-  `@font-face`, so the new tab is fully offline and self-contained, then drop the
-  remote `style-src` / `font-src` entries from the manifest CSP.
-- Add real raster icons (PNG 48/96/128) if the SVG icon is ever rejected.
-- Package: zip the **contents** of this folder (manifest at the zip root).
+```sh
+npm i -g web-ext
+web-ext lint -s extension/
+
+# permanent personal install (no listing): produces a signed .xpi
+web-ext sign -s extension/ --channel=unlisted --api-key=… --api-secret=…
+#   API keys: addons.mozilla.org → Developer Hub → Manage API Keys
+
+# public listing: zip the CONTENTS of this folder (manifest at the zip root)
+( cd extension && zip -r -FS ../anicca.zip . -x '*.DS_Store' )
+#   then addons.mozilla.org → Developer Hub → Submit a New Add-on → upload
+```
+
+If the SVG icon is ever rejected on review, add raster PNGs (48/96/128).
 
 ## Notes
 
