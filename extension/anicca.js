@@ -407,7 +407,8 @@
   const startLens = (() => {
     const l = new URLSearchParams(location.search).get('lens');
     if (ACCENTS[l]) return l;
-    if (ACCENTS[window.ANICCA_DEFAULT_LENS]) return window.ANICCA_DEFAULT_LENS; // e.g. the new-tab extension
+    if (ACCENTS[window.ANICCA_DEFAULT_LENS]) return window.ANICCA_DEFAULT_LENS;
+    if (ACCENTS[document.body.dataset.lens]) return document.body.dataset.lens; // initial <body data-lens>, CSP-safe
     return 'anu';
   })();
   setLens(startLens);

@@ -45,5 +45,7 @@ extension pages, and fine for `about:debugging`). For a store release we should:
 ## Notes
 
 - Manifest V3, `chrome_url_overrides.newtab`. Min Firefox 115.
-- Default lens is set via `window.ANICCA_DEFAULT_LENS = 'stillness'` in `newtab.html`;
-  the engine reads it (falling back to `?lens=` param, then `anu`).
+- Default lens is set by `<body data-lens="stillness">` in `newtab.html`. An inline
+  `<script>` would be blocked by the extension CSP (`script-src 'self'`), so the
+  engine resolves the lens from: URL `?lens=` → `window.ANICCA_DEFAULT_LENS` →
+  the `<body data-lens>` attribute → `anu`.
