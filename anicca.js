@@ -65,6 +65,9 @@
 
   // a single source of truth for the URL: only non-default config + the lens
   function writeURL() {
+    // extension new-tab pages: never touch the URL, or Firefox shows the
+    // moz-extension://… address instead of the clean, empty new-tab bar
+    if (location.protocol === 'moz-extension:' || location.protocol === 'chrome-extension:') return;
     const q = new URLSearchParams();
     for (const k of Object.keys(DEFAULTS)) {
       if (cfg[k] !== DEFAULTS[k]) q.set(k, cfg[k]);
