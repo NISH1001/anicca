@@ -66,5 +66,5 @@ If the SVG icon is ever rejected on review, add raster PNGs (48/96/128).
   `window.ANICCA_DEFAULTS` (the web page does this with personal numbers; the
   extension does not). `window.ANICCA_ONBOARD` + an empty config → first-run setup.
 - Lens resolves from: URL `?lens=` → `window.ANICCA_DEFAULT_LENS` →
-  `<body data-lens>` → `anu`. On extension pages `writeURL()` is a no-op, so the
+  `<body data-lens>` → `together`. On extension pages `writeURL()` is a no-op, so the
   address bar stays clean.

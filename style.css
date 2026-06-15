@@ -32,7 +32,7 @@
 /* per-lens accent themes (canvas reads these too) */
 body[data-lens='life']      { --accent: #c7d4e6; --accent-soft: rgba(199, 212, 230, 0.5); }
 body[data-lens='stillness'] { --accent: #7fd8c0; --accent-soft: rgba(127, 216, 192, 0.5); }
-body[data-lens='anu']       { --accent: #f0b36a; --accent-soft: rgba(240, 179, 106, 0.5); }
+body[data-lens='together']       { --accent: #f0b36a; --accent-soft: rgba(240, 179, 106, 0.5); }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 

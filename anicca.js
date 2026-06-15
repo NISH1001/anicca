@@ -31,7 +31,7 @@
   const ACCENTS = {
     life:      [199, 212, 230],
     stillness: [127, 216, 192],
-    anu:       [240, 179, 106],
+    together:       [240, 179, 106],
   };
 
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -76,7 +76,7 @@
     for (const k of Object.keys(DEFAULTS)) {
       if (cfg[k] !== DEFAULTS[k]) q.set(k, cfg[k]);
     }
-    if (lens !== 'anu') q.set('lens', lens); // anu is the default landing
+    if (lens !== 'together') q.set('lens', lens); // together is the default landing
     const qs = q.toString();
     history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
   }
@@ -87,7 +87,7 @@
   }
 
   let cfg = readConfig();
-  let lens = 'anu';
+  let lens = 'together';
 
   // ---------- the math ----------
   const ageDate = (birthYear, addAge) => new Date(birthYear + addAge, 0, 1).getTime();
@@ -189,7 +189,7 @@
   const canvas = $('field');
   const ctx = canvas.getContext('2d', { alpha: false });
   let W = 0, H = 0, DPR = 1;
-  const acc = [...ACCENTS.anu];          // current (lerped) accent
+  const acc = [...ACCENTS.together];          // current (lerped) accent
   let glow = null;                        // pre-rendered glow sprite
   let auraGradient = null, bgGradient = null; // cached canvas gradients
   let lgR = -1, lgG = -1, lgB = -1;       // accent the sprites were last built for
@@ -364,7 +364,7 @@
     if (e.target.matches('input')) return;
     if (e.key === '1') setLens('life');
     if (e.key === '2') setLens('stillness');
-    if (e.key === '3') setLens('anu');
+    if (e.key === '3') setLens('together');
   });
 
   // ---------- config panel ----------
@@ -398,7 +398,7 @@
   }
 
   function updateNote() {
-    const m = lensModel('anu');
+    const m = lensModel('together');
     const perDay = m.perDay.toFixed(1);
     const yr = new Date(m.horizon).getFullYear();
     el.panelNote.textContent = `together: ${perDay} waking hrs/day · until ${yr} (age ${cfg.togetherToAge})`;
@@ -444,7 +444,7 @@
     if (ACCENTS[l]) return l;
     if (ACCENTS[window.ANICCA_DEFAULT_LENS]) return window.ANICCA_DEFAULT_LENS;
     if (ACCENTS[document.body.dataset.lens]) return document.body.dataset.lens; // initial <body data-lens>, CSP-safe
-    return 'anu';
+    return 'together';
   })();
   setLens(startLens);
   fillForm();

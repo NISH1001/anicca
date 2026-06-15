@@ -42,7 +42,7 @@ index.html?youBorn=1992&herBorn=1990&herName=<name>&sleep=8&work=8&personal=2&me
 | `meditation`    | hours of stillness per day                | 2       |
 | `togetherToAge` | age you both at least reach (binds on the elder) | 60 |
 | `toAge`         | a realistic life horizon                  | 80      |
-| `lens`          | which lens to open on — `life` · `stillness` · `anu` | anu |
+| `lens`          | which lens to open on — `life` · `stillness` · `together` | together |
 
 Every lens is directly linkable — switch lenses and the URL updates live, so you
 can send someone straight to, say, `…/anicca?lens=stillness`.
