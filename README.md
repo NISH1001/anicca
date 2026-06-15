@@ -28,14 +28,14 @@ your browser, and write themselves into the URL so any configuration is shareabl
 You can also set everything by query string:
 
 ```
-index.html?youBorn=1993&herBorn=1991&herName=Anu%20priyaaay&sleep=8&work=8&personal=2&meditation=2&togetherToAge=60&toAge=80
+index.html?youBorn=1992&herBorn=1990&herName=<name>&sleep=8&work=8&personal=2&meditation=2&togetherToAge=60&toAge=80
 ```
 
 | param           | meaning                                   | default |
 | --------------- | ----------------------------------------- | ------- |
-| `youBorn`       | your birth year                           | 1993    |
-| `herBorn`       | their birth year                          | 1991    |
-| `herName`       | their name (shown on the *together* lens) | Anu priyaaay |
+| `youBorn`       | your birth year                           | 1992    |
+| `herBorn`       | their birth year                          | 1990    |
+| `herName`       | their name (shown on the *together* lens) | `<name>` |
 | `sleep`         | hours of sleep per day                    | 8       |
 | `work`          | hours of work per day                     | 8       |
 | `personal`      | hours of upkeep per day (shower, etc.)    | 2       |

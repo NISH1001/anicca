@@ -7,7 +7,7 @@
 
   // ---- defaults: exactly what we set; anyone can tune them ----
   const DEFAULTS = {
-    youBorn: 1990,
+    youBorn: 1992, // neutral placeholder: "you" two years younger than "them"
     herName: '',
     herBorn: 1990,
     sleep: 8,
