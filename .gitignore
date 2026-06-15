@@ -12,3 +12,6 @@ web-ext-artifacts/
 *.log
 .vscode/
 .idea/
+
+# local scratch (screenshots, etc.)
+tmp/
