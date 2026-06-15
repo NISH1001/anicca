@@ -510,6 +510,12 @@ body.instant .lenses {
   outline: none;
   border-bottom-color: var(--accent);
 }
+.panel__form input[type='date'] {
+  color-scheme: dark; /* dark native date picker */
+  width: 8.6rem;
+  text-align: left;
+  font-size: 0.82rem;
+}
 /* strip number spinners — keep it quiet */
 .panel__form input[type='number']::-webkit-inner-spin-button,
 .panel__form input[type='number']::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }

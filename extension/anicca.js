@@ -5,11 +5,11 @@
 (() => {
   'use strict';
 
-  // ---- defaults: exactly what we set; anyone can tune them ----
+  // ---- defaults: neutral; a host page seeds its own via window.ANICCA_DEFAULTS ----
   const DEFAULTS = {
-    youBorn: 1992, // neutral placeholder: "you" two years younger than "them"
-    herName: '',
-    herBorn: 1990,
+    youDob: '1992-01-01', // full date of birth (YYYY-MM-DD); "you" two years younger
+    theirName: '',
+    theirDob: '1990-01-01',
     sleep: 8,
     work: 8,
     personal: 2,
@@ -23,7 +23,7 @@
   if (window.ANICCA_DEFAULTS) Object.assign(DEFAULTS, window.ANICCA_DEFAULTS);
 
   const KEY = 'anicca.cfg';
-  const NUM_KEYS = ['youBorn', 'herBorn', 'sleep', 'work', 'personal', 'meditation', 'togetherToAge', 'toAge'];
+  const STR_KEYS = ['youDob', 'theirDob', 'theirName']; // read from URL as strings, not numbers
   const DAY_MS = 86400000;
   const YEAR_DAYS = 365.25;
 
@@ -40,11 +40,20 @@
   const clampNum = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
   const num = (v, d) => { const n = Number(v); return Number.isFinite(n) ? n : d; };
 
+  // accept YYYY-MM-DD; migrate a legacy birth *year* to Jan 1 of that year
+  function dob(v, legacyYear, dflt) {
+    if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v))) return v;
+    const y = Number(legacyYear);
+    if (Number.isFinite(y) && y >= 1900 && y <= 2100) return `${y}-01-01`;
+    return dflt;
+  }
+
   function sanitize(c) {
+    const tn = c.theirName ?? c.herName ?? ''; // accept legacy herName
     return {
-      youBorn: Math.round(clampNum(num(c.youBorn, DEFAULTS.youBorn), 1900, 2026)),
-      herBorn: Math.round(clampNum(num(c.herBorn, DEFAULTS.herBorn), 1900, 2026)),
-      herName: (typeof c.herName === 'string' && c.herName.trim() ? c.herName : DEFAULTS.herName).slice(0, 20),
+      youDob: dob(c.youDob, c.youBorn, DEFAULTS.youDob),
+      theirDob: dob(c.theirDob, c.herBorn, DEFAULTS.theirDob),
+      theirName: (typeof tn === 'string' && tn.trim() ? tn : DEFAULTS.theirName).slice(0, 20),
       sleep: clampNum(num(c.sleep, DEFAULTS.sleep), 0, 24),
       work: clampNum(num(c.work, DEFAULTS.work), 0, 24),
       personal: clampNum(num(c.personal, DEFAULTS.personal), 0, 24),
@@ -62,8 +71,11 @@
     } catch (_) { /* ignore */ }
     const q = new URLSearchParams(location.search);
     for (const k of Object.keys(DEFAULTS)) {
-      if (q.has(k)) cfg[k] = (k === 'herName') ? q.get(k) : Number(q.get(k));
+      if (q.has(k)) cfg[k] = STR_KEYS.includes(k) ? q.get(k) : Number(q.get(k));
     }
+    // legacy year params (?youBorn / ?herBorn) → migrated to a date in sanitize()
+    if (q.has('youBorn')) cfg.youBorn = q.get('youBorn');
+    if (q.has('herBorn')) cfg.herBorn = q.get('herBorn');
     return sanitize(cfg);
   }
 
@@ -90,15 +102,24 @@
   let lens = 'together';
 
   // ---------- the math ----------
-  const ageDate = (birthYear, addAge) => new Date(birthYear + addAge, 0, 1).getTime();
+  // parse YYYY-MM-DD as a LOCAL date (avoids a UTC off-by-one)
+  function parseDob(s) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || '');
+    return m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date(1990, 0, 1);
+  }
+  const bornMs = (s) => parseDob(s).getTime();
+  const atAge = (s, addAge) => {
+    const b = parseDob(s);
+    return new Date(b.getFullYear() + addAge, b.getMonth(), b.getDate()).getTime();
+  };
 
   function lensModel(key) {
-    const name = (cfg.herName && cfg.herName !== '—') ? cfg.herName : 'them';
+    const name = (cfg.theirName && cfg.theirName !== '—') ? cfg.theirName : 'them';
     if (key === 'life') {
       return {
         perDay: Math.max(0, 24 - cfg.sleep),
-        origin: ageDate(cfg.youBorn, 0),
-        horizon: ageDate(cfg.youBorn, cfg.toAge),
+        origin: bornMs(cfg.youDob),
+        horizon: atAge(cfg.youDob, cfg.toAge),
         eyebrow: 'your waking life',
         unit: 'waking hours remain',
         line: 'Not the time until you end — the time you are still here for.',
@@ -107,18 +128,18 @@
     if (key === 'stillness') {
       return {
         perDay: cfg.meditation,
-        origin: ageDate(cfg.youBorn, 0),
-        horizon: ageDate(cfg.youBorn, cfg.toAge),
+        origin: bornMs(cfg.youDob),
+        horizon: atAge(cfg.youDob, cfg.toAge),
         eyebrow: 'hours of stillness',
         unit: 'hours of stillness await',
         line: 'Returned to the breath each day. Watch them arise. Watch them pass.',
       };
     }
     // together
-    const horizon = Math.min(ageDate(cfg.youBorn, cfg.togetherToAge), ageDate(cfg.herBorn, cfg.togetherToAge));
+    const horizon = Math.min(atAge(cfg.youDob, cfg.togetherToAge), atAge(cfg.theirDob, cfg.togetherToAge));
     return {
       perDay: Math.max(0, 24 - cfg.sleep - cfg.work - cfg.personal),
-      origin: ageDate(Math.min(cfg.youBorn, cfg.herBorn), 0),
+      origin: Math.min(bornMs(cfg.youDob), bornMs(cfg.theirDob)),
       horizon,
       eyebrow: `time with ${name}`,
       unit: 'waking hours together remain',
@@ -179,7 +200,7 @@
 
     // your age right now — lens-independent; many decimals so it visibly streams
     if (el.ageMark) {
-      const ageYears = Math.max(0, (now - ageDate(cfg.youBorn, 0)) / (YEAR_DAYS * DAY_MS));
+      const ageYears = Math.max(0, (now - bornMs(cfg.youDob)) / (YEAR_DAYS * DAY_MS));
       el.ageMark.style.left = pct;
       el.ageMark.textContent = Math.floor(ageYears) + '.' + (ageYears % 1).toFixed(9).slice(2);
     }
@@ -409,7 +430,7 @@
     for (const k of Object.keys(DEFAULTS)) {
       const input = el.cfgForm.elements[k];
       if (!input) continue;
-      next[k] = (k === 'herName') ? input.value : input.value;
+      next[k] = input.value; // sanitize() coerces types
     }
     cfg = sanitize(next);
     persist();

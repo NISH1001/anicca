@@ -28,14 +28,14 @@ your browser, and write themselves into the URL so any configuration is shareabl
 You can also set everything by query string:
 
 ```
-index.html?youBorn=1992&herBorn=1990&herName=<name>&sleep=8&work=8&personal=2&meditation=2&togetherToAge=60&toAge=80
+index.html?youDob=1992-06-15&theirDob=1990-06-15&theirName=<name>&sleep=8&work=8&personal=2&meditation=2&togetherToAge=60&toAge=80
 ```
 
 | param           | meaning                                   | default |
 | --------------- | ----------------------------------------- | ------- |
-| `youBorn`       | your birth year                           | 1992    |
-| `herBorn`       | their birth year                          | 1990    |
-| `herName`       | their name (shown on the *together* lens) | `<name>` |
+| `youDob`        | your date of birth (`YYYY-MM-DD`)         | 1992-01-01 |
+| `theirDob`      | their date of birth (`YYYY-MM-DD`)        | 1990-01-01 |
+| `theirName`     | their name (shown on the *together* lens) | `<name>` |
 | `sleep`         | hours of sleep per day                    | 8       |
 | `work`          | hours of work per day                     | 8       |
 | `personal`      | hours of upkeep per day (shower, etc.)    | 2       |
@@ -66,9 +66,10 @@ Then **Settings → Pages → Source: `main` / root**. Live at
 
 ## Privacy note
 
-The committed defaults include a name and birth years. Since the repo is public,
-you may prefer to ship neutral defaults (e.g. blank the name) and keep your real
-numbers in the URL / your own browser only. Your call — it's your page.
+The shared engine ships **neutral** defaults — no personal data. This page seeds
+its own real values via a small `window.ANICCA_DEFAULTS` script in `index.html`
+(your call what goes there). The Firefox add-on stays neutral and asks each person
+for their own details on first run, so it carries nothing personal.
 
 ---
 
