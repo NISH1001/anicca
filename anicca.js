@@ -333,15 +333,24 @@
   });
 
   // ---------- config panel ----------
+  // tap anywhere outside the panel (and not on its openers) closes it
+  function onOutsidePointer(e) {
+    if (!el.panel.contains(e.target) && e.target !== el.cfgToggle && e.target !== el.cfgLink) {
+      closePanel();
+    }
+  }
   function openPanel() {
     el.panel.classList.add('is-open');
     el.panel.setAttribute('aria-hidden', 'false');
     el.cfgToggle.setAttribute('aria-expanded', 'true');
+    // defer so the click that opened it doesn't immediately close it
+    setTimeout(() => document.addEventListener('pointerdown', onOutsidePointer), 0);
   }
   function closePanel() {
     el.panel.classList.remove('is-open');
     el.panel.setAttribute('aria-hidden', 'true');
     el.cfgToggle.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('pointerdown', onOutsidePointer);
   }
   function togglePanel() { el.panel.classList.contains('is-open') ? closePanel() : openPanel(); }
 
