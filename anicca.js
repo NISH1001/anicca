@@ -406,7 +406,9 @@
   buildGlow();
   const startLens = (() => {
     const l = new URLSearchParams(location.search).get('lens');
-    return ACCENTS[l] ? l : 'anu';
+    if (ACCENTS[l]) return l;
+    if (ACCENTS[window.ANICCA_DEFAULT_LENS]) return window.ANICCA_DEFAULT_LENS; // e.g. the new-tab extension
+    return 'anu';
   })();
   setLens(startLens);
   fillForm();

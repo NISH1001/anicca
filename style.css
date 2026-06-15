@@ -483,12 +483,54 @@ body[data-lens='stillness']::before {
 }
 .panel__reset:hover { background: var(--accent); color: var(--bg); }
 
-/* small screens */
-@media (max-width: 560px) {
-  .stage { gap: 1.2rem; }
-  .count__number { letter-spacing: -0.01em; }
-  .foot { flex-direction: column; gap: 0.3rem; align-items: center; text-align: center; }
+/* small screens / phones */
+@media (max-width: 600px) {
+  .stage {
+    gap: clamp(0.8rem, 2.5vh, 1.4rem);
+    padding-left: 1.3rem;
+    padding-right: 1.3rem;
+    padding-top: calc(1.4rem + env(safe-area-inset-top));
+    padding-bottom: calc(clamp(4.4rem, 14vh, 6rem) + env(safe-area-inset-bottom));
+  }
+  .count { gap: 0.55rem; }
+  /* size to viewport width so the number never overflows its one line */
+  .count__number {
+    font-size: clamp(1.9rem, 13vw, 3.6rem);
+    letter-spacing: -0.01em;
+  }
+  .num-frac { font-size: 0.42em; }
+  .count__unit { font-size: 1.05rem; }
+  .count__sub {
+    font-size: clamp(0.74rem, 3.2vw, 0.96rem);
+    letter-spacing: 0.05em;
+  }
+  .count__line { font-size: clamp(1.02rem, 4.6vw, 1.32rem); max-width: 24ch; }
+
+  .lifeline__labels { font-size: 0.72rem; letter-spacing: 0.14em; }
+  .lenses { gap: clamp(1.1rem, 7vw, 1.9rem); }
+
+  .cfg-toggle { top: calc(1.3rem + env(safe-area-inset-top)); right: 1.3rem; }
+  .mark { padding-top: env(safe-area-inset-top); }
+
+  .foot {
+    flex-direction: column;
+    gap: 0.3rem;
+    align-items: center;
+    text-align: center;
+    bottom: calc(0.7rem + env(safe-area-inset-bottom));
+    font-size: 0.6rem;
+    padding: 0 1.3rem;
+  }
   .foot__cfg { text-align: center; }
+}
+
+/* landscape phones — short viewports */
+@media (max-height: 480px) and (orientation: landscape) {
+  .stage { gap: 0.4rem; padding-bottom: 3.2rem; }
+  .count { gap: 0.3rem; }
+  .count__number { font-size: clamp(2rem, 9vw, 4rem); }
+  .count__line { font-size: 1rem; }
+  .lifeline { display: none; } /* not enough room; keep the count + lenses */
 }
 
 /* stillness over motion */
