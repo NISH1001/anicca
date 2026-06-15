@@ -142,31 +142,36 @@
   const fmtInt = (n) => Math.floor(n).toLocaleString('en-US');
   const fmtFrac = (n) => (n - Math.floor(n)).toFixed(6).slice(2);
 
+  let model = null; // cached lens model; recomputed only when lens/cfg changes
+  let lastSub = 0;  // throttle the slow-moving days/years line
   function applyLensCopy() {
-    const m = lensModel(lens);
+    const m = model = lensModel(lens);
     el.eyebrow.textContent = m.eyebrow;
     el.unit.textContent = m.unit;
     el.line.textContent = m.line;
+    el.originLabel.textContent = new Date(m.origin).getFullYear();
+    el.horizonLabel.textContent = new Date(m.horizon).getFullYear();
   }
 
   function updateReadout(now) {
-    const m = lensModel(lens);
+    const m = model || (model = lensModel(lens));
     const hrs = remainingHours(now, m);
     el.numInt.textContent = fmtInt(hrs);
     el.numFrac.textContent = fmtFrac(hrs);
 
-    const days = hrs / 24;
-    const years = days / YEAR_DAYS;
-    el.sub.textContent = `≈ ${fmtInt(days)} days · ${years.toFixed(1)} years, lived all at once`;
+    // the days/years line moves slowly — refresh ~twice a second, not every frame
+    if (now - lastSub > 500) {
+      lastSub = now;
+      const days = hrs / 24;
+      el.sub.textContent = `≈ ${fmtInt(days)} days · ${(days / YEAR_DAYS).toFixed(1)} years, lived all at once`;
+    }
 
-    // lifeline
+    // lifeline (origin/horizon year labels are set in applyLensCopy, not per frame)
     const span = m.horizon - m.origin;
     const frac = clampNum((now - m.origin) / span, 0, 1);
     const pct = (frac * 100).toFixed(3) + '%';
     el.lived.style.width = pct;
     el.nowMark.style.left = pct;
-    el.originLabel.textContent = new Date(m.origin).getFullYear();
-    el.horizonLabel.textContent = new Date(m.horizon).getFullYear();
 
     // your age right now — lens-independent; many decimals so it visibly streams
     if (el.ageMark) {
@@ -182,15 +187,21 @@
   let W = 0, H = 0, DPR = 1;
   const acc = [...ACCENTS.anu];          // current (lerped) accent
   let glow = null;                        // pre-rendered glow sprite
+  let auraGradient = null, bgGradient = null; // cached canvas gradients
+  let lgR = -1, lgG = -1, lgB = -1;       // accent the sprites were last built for
   const pointer = { x: -1e4, y: -1e4, on: false };
   let particles = [];
 
+  // rebuild the glow sprite + aura only when the (rounded) accent changes —
+  // not every frame. removes a canvas + gradient allocation per frame.
   function buildGlow() {
+    const r = Math.round(acc[0]), gg = Math.round(acc[1]), b = Math.round(acc[2]);
+    if (glow && r === lgR && gg === lgG && b === lgB) return;
+    lgR = r; lgG = gg; lgB = b;
     const s = 64;
     const c = document.createElement('canvas');
     c.width = c.height = s;
     const g = c.getContext('2d');
-    const [r, gg, b] = acc.map(Math.round);
     const grd = g.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
     grd.addColorStop(0, `rgba(${r},${gg},${b},1)`);
     grd.addColorStop(0.22, `rgba(${r},${gg},${b},0.45)`);
@@ -198,6 +209,22 @@
     g.fillStyle = grd;
     g.fillRect(0, 0, s, s);
     glow = c;
+    buildAura();
+  }
+
+  // central aura (accent + size dependent) and abyss background (size only) —
+  // cached; rebuilt on accent change (aura) and on resize (both)
+  function buildAura() {
+    const r = Math.round(acc[0]), gg = Math.round(acc[1]), b = Math.round(acc[2]);
+    auraGradient = ctx.createRadialGradient(W * 0.5, H * 0.42, 0, W * 0.5, H * 0.42, Math.min(W, H) * 0.42);
+    auraGradient.addColorStop(0, `rgba(${r},${gg},${b},1)`);
+    auraGradient.addColorStop(1, `rgba(${r},${gg},${b},0)`);
+  }
+  function buildBg() {
+    bgGradient = ctx.createRadialGradient(W * 0.5, H * 0.42, 0, W * 0.5, H * 0.42, Math.max(W, H) * 0.75);
+    bgGradient.addColorStop(0, 'rgba(14,16,24,1)');
+    bgGradient.addColorStop(0.5, 'rgba(8,9,15,1)');
+    bgGradient.addColorStop(1, 'rgba(4,5,9,1)');
   }
 
   function spawn(p, first) {
@@ -228,16 +255,13 @@
     canvas.width = W * DPR; canvas.height = H * DPR;
     canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    buildBg();
+    buildAura();
     initParticles();
   }
 
   function drawBackground() {
-    // the abyss — a near-black with a faint warm/cool centre
-    const g = ctx.createRadialGradient(W * 0.5, H * 0.42, 0, W * 0.5, H * 0.42, Math.max(W, H) * 0.75);
-    g.addColorStop(0, 'rgba(14,16,24,1)');
-    g.addColorStop(0.5, 'rgba(8,9,15,1)');
-    g.addColorStop(1, 'rgba(4,5,9,1)');
-    ctx.fillStyle = g;
+    ctx.fillStyle = bgGradient;
     ctx.fillRect(0, 0, W, H);
   }
 
@@ -274,14 +298,10 @@
       ctx.drawImage(glow, p.x - size / 2, p.y - size / 2, size, size);
     }
 
-    // the present nexus — a breathing aura behind the count
-    const [r, gg, b] = acc.map(Math.round);
-    const aura = ctx.createRadialGradient(W * 0.5, H * 0.42, 0, W * 0.5, H * 0.42, Math.min(W, H) * 0.42);
-    const auraA = 0.05 + breath * 0.05;
-    aura.addColorStop(0, `rgba(${r},${gg},${b},${auraA})`);
-    aura.addColorStop(1, `rgba(${r},${gg},${b},0)`);
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = aura;
+    // the present nexus — cached aura gradient; breath drives the alpha, so
+    // no per-frame gradient allocation
+    ctx.globalAlpha = 0.05 + breath * 0.05;
+    ctx.fillStyle = auraGradient;
     ctx.fillRect(0, 0, W, H);
 
     ctx.globalCompositeOperation = 'source-over';
