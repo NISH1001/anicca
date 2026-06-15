@@ -2,6 +2,8 @@
 
 > **अनिच्च** · *anicca* — Pali for **impermanence**. All that arises, passes.
 
+![anicca on the stillness lens](assets/screenshot.png)
+
 A live meditation on finite time. Not a death-countdown — a quiet reminder of the
 waking, meaningful hours you *still have*, rendered as light against the dark.
 
