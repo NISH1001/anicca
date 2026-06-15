@@ -348,6 +348,23 @@ body[data-lens='stillness']::before {
   50%      { box-shadow: 0 0 30px 7px var(--accent), 0 0 10px var(--accent); }
 }
 
+/* instant reveal — for the new-tab extension: no staggered intro, the
+   number is there the moment the tab opens */
+body.instant .mark,
+body.instant .cfg-toggle,
+body.instant .count__eyebrow,
+body.instant .count__number,
+body.instant .count__unit,
+body.instant .count__sub,
+body.instant .count__line,
+body.instant .lifeline,
+body.instant .lenses {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
 /* ---- configure ---- */
 .cfg-toggle {
   position: fixed;
