@@ -1,8 +1,8 @@
 # anicca — new tab (Firefox)
 
-Replaces Firefox's new-tab page with [anicca](../), defaulting to the **life**
-lens: the waking hours you still have, streaming in real time as light against
-the dark. Open a new tab, remember impermanence.
+Replaces Firefox's new-tab page with [anicca](../), defaulting to the **stillness**
+lens: the hours of stillness still ahead of you, streaming in real time as light
+against the dark. Open a new tab, remember impermanence.
 
 It reuses the web app's engine verbatim (`style.css`, `anicca.js`) — this folder
 just adds the manifest, a new-tab wrapper, and an icon.
@@ -45,5 +45,5 @@ extension pages, and fine for `about:debugging`). For a store release we should:
 ## Notes
 
 - Manifest V3, `chrome_url_overrides.newtab`. Min Firefox 115.
-- Default lens is set via `window.ANICCA_DEFAULT_LENS = 'life'` in `newtab.html`;
+- Default lens is set via `window.ANICCA_DEFAULT_LENS = 'stillness'` in `newtab.html`;
   the engine reads it (falling back to `?lens=` param, then `anu`).
