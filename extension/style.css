@@ -231,8 +231,10 @@ body {
   left: 0; top: 0; height: 100%;
   width: 0%;
   border-radius: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent));
-  opacity: 0.7;
+  background: linear-gradient(90deg, transparent, var(--accent-soft) 45%, var(--accent));
+  background-size: 220% 100%;
+  opacity: 0.78;
+  animation: lifeflow 5.5s linear infinite; /* light flowing toward now */
 }
 .lifeline__now {
   position: absolute;
@@ -244,6 +246,17 @@ body {
   transform: translate(-50%, -50%);
   box-shadow: 0 0 20px 3px var(--accent), 0 0 6px var(--accent);
   animation: pulse 3.4s ease-in-out infinite;
+}
+/* the present, pinging outward — arising and passing */
+.lifeline__now::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  transform: translate(-50%, -50%);
+  animation: nowripple 2.6s ease-out infinite;
 }
 .lifeline__age {
   /* your age, now — pinned above the moving now-dot; streams to feel time pass */
@@ -362,6 +375,15 @@ body[data-lens='stillness']::before {
 @keyframes pulse {
   0%, 100% { box-shadow: 0 0 20px 3px var(--accent), 0 0 6px var(--accent); }
   50%      { box-shadow: 0 0 30px 7px var(--accent), 0 0 10px var(--accent); }
+}
+@keyframes nowripple {
+  0%   { opacity: 0.7;  transform: translate(-50%, -50%) scale(0.5); }
+  80%  { opacity: 0.05; }
+  100% { opacity: 0;    transform: translate(-50%, -50%) scale(5); }
+}
+@keyframes lifeflow {
+  0%   { background-position: 200% 0; }
+  100% { background-position: 0% 0; }
 }
 
 /* instant reveal — for the new-tab extension: no staggered intro, the
@@ -568,7 +590,8 @@ body.instant .lenses {
 
 /* stillness over motion */
 @media (prefers-reduced-motion: reduce) {
-  .grain, .lifeline__now { animation: none; }
+  .grain, .lifeline__now, .lifeline__lived { animation: none; }
+  .lifeline__now::after { display: none; }
   .mark, .count__eyebrow, .count__number, .count__unit,
   .count__sub, .count__line, .lifeline, .lenses {
     animation-duration: 0.01s;
