@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>anicca · all that arises, passes</title>
+  <meta name="description" content="A live meditation on impermanence — the finite, waking hours you still have, rendered as light against the dark." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=IBM+Plex+Mono:wght@300;400;500&family=Noto+Serif+Devanagari:wght@400;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-lens="life">
+  <!-- the abyss + the arising, passing field -->
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <main class="stage">
+    <!-- word-mark -->
+    <header class="mark">
+      <span class="mark__word">anicca</span>
+      <span class="mark__gloss"><span class="deva">अनिच्च</span> · impermanence</span>
+    </header>
+
+    <!-- the count -->
+    <section class="count" aria-live="polite">
+      <p class="count__eyebrow" id="eyebrow">time together</p>
+
+      <h1 class="count__number" id="number" aria-label="waking hours remaining">
+        <span class="num-int" id="numInt">000,000</span><span class="num-dot">.</span><span class="num-frac" id="numFrac">000000</span>
+      </h1>
+
+      <p class="count__unit" id="unit">waking hours remain</p>
+
+      <p class="count__sub" id="sub">≈ 0 days · 0 years</p>
+
+      <p class="count__line" id="line">The hours you have not yet lived.</p>
+    </section>
+
+    <!-- the lifeline -->
+    <section class="lifeline" aria-hidden="true">
+      <div class="lifeline__track">
+        <div class="lifeline__lived" id="lived"></div>
+        <div class="lifeline__now" id="nowMark"></div>
+      </div>
+      <div class="lifeline__labels">
+        <span id="originLabel">·</span>
+        <span class="lifeline__nowlbl" id="nowLabel">now</span>
+        <span id="horizonLabel">·</span>
+      </div>
+    </section>
+
+    <!-- the lenses -->
+    <nav class="lenses" id="lenses">
+      <button class="lens is-active" data-lens="life">life</button>
+      <button class="lens" data-lens="stillness">stillness</button>
+      <button class="lens" data-lens="anu">together</button>
+    </nav>
+  </main>
+
+  <!-- configure: anyone can tweak; defaults to what we set -->
+  <button class="cfg-toggle" id="cfgToggle" aria-expanded="false" aria-controls="panel">tune</button>
+
+  <aside class="panel" id="panel" aria-hidden="true">
+    <div class="panel__head">
+      <h2 class="panel__title">your numbers</h2>
+      <button class="panel__close" id="panelClose" aria-label="close">esc</button>
+    </div>
+
+    <form class="panel__form" id="cfgForm" autocomplete="off">
+      <fieldset class="panel__group">
+        <legend>the two of you</legend>
+        <label>you, born<input type="number" name="youBorn" min="1900" max="2026" inputmode="numeric" /></label>
+        <label>them, name<input type="text" name="herName" maxlength="20" /></label>
+        <label>them, born<input type="number" name="herBorn" min="1900" max="2026" inputmode="numeric" /></label>
+      </fieldset>
+
+      <fieldset class="panel__group">
+        <legend>a day, in hours</legend>
+        <label>sleep<input type="number" name="sleep" min="0" max="24" step="0.5" /></label>
+        <label>work<input type="number" name="work" min="0" max="24" step="0.5" /></label>
+        <label>upkeep<input type="number" name="personal" min="0" max="24" step="0.5" /></label>
+        <label>stillness<input type="number" name="meditation" min="0" max="24" step="0.5" /></label>
+      </fieldset>
+
+      <fieldset class="panel__group">
+        <legend>horizons, in years of age</legend>
+        <label>together until<input type="number" name="togetherToAge" min="1" max="120" /></label>
+        <label>a life until<input type="number" name="toAge" min="1" max="120" /></label>
+      </fieldset>
+
+      <p class="panel__note" id="panelNote">·</p>
+      <button type="button" class="panel__reset" id="cfgReset">reset to ours</button>
+    </form>
+  </aside>
+
+  <footer class="foot">
+    <span class="foot__breath" id="breathLbl">breathe in</span>
+    <span class="foot__cfg">all that arises, passes — <a href="#" id="cfgLink">set your own numbers</a></span>
+  </footer>
+
+  <script>window.ANICCA_DEFAULT_LENS = 'life';</script>
+  <script src="anicca.js"></script>
+</body>
+</html>
