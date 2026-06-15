@@ -5,7 +5,11 @@ lens: the hours of stillness still ahead of you, streaming in real time as light
 against the dark. Open a new tab, remember impermanence.
 
 It reuses the web app's engine verbatim (`style.css`, `anicca.js`) — this folder
-just adds the manifest, a new-tab wrapper, and an icon.
+just adds the manifest, a new-tab wrapper, an icon, and `newtab-config.js`.
+
+It ships with **neutral defaults and no personal data**. On the first new tab
+(no saved config) it opens the setup panel so you can enter your birth year;
+after that it stays silent and remembers your settings.
 
 ## Try it (temporary install)
 
@@ -45,7 +49,12 @@ extension pages, and fine for `about:debugging`). For a store release we should:
 ## Notes
 
 - Manifest V3, `chrome_url_overrides.newtab`. Min Firefox 115.
-- Default lens is set by `<body data-lens="stillness">` in `newtab.html`. An inline
-  `<script>` would be blocked by the extension CSP (`script-src 'self'`), so the
-  engine resolves the lens from: URL `?lens=` → `window.ANICCA_DEFAULT_LENS` →
-  the `<body data-lens>` attribute → `anu`.
+- `newtab-config.js` (an external file — inline `<script>` is blocked by the
+  extension CSP, `script-src 'self'`) sets `window.ANICCA_DEFAULT_LENS = 'stillness'`
+  and `window.ANICCA_ONBOARD = true`. It carries **no personal data**.
+- The shared engine ships **neutral** defaults. A host page can seed its own via
+  `window.ANICCA_DEFAULTS` (the web page does this with personal numbers; the
+  extension does not). `window.ANICCA_ONBOARD` + an empty config → first-run setup.
+- Lens resolves from: URL `?lens=` → `window.ANICCA_DEFAULT_LENS` →
+  `<body data-lens>` → `anu`. On extension pages `writeURL()` is a no-op, so the
+  address bar stays clean.

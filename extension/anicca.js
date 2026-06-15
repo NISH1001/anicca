@@ -7,9 +7,9 @@
 
   // ---- defaults: exactly what we set; anyone can tune them ----
   const DEFAULTS = {
-    youBorn: 1993,
-    herName: 'Anu priyaaay',
-    herBorn: 1991,
+    youBorn: 1990,
+    herName: '',
+    herBorn: 1990,
     sleep: 8,
     work: 8,
     personal: 2,
@@ -17,6 +17,10 @@
     togetherToAge: 60, // both live to at least this; binds on the elder
     toAge: 80,         // a realistic life horizon
   };
+  // a host page may seed its own defaults: the web page injects personal ones,
+  // the extension stays neutral (and onboards on first run). keeps personal
+  // data out of the shared engine.
+  if (window.ANICCA_DEFAULTS) Object.assign(DEFAULTS, window.ANICCA_DEFAULTS);
 
   const KEY = 'anicca.cfg';
   const NUM_KEYS = ['youBorn', 'herBorn', 'sleep', 'work', 'personal', 'meditation', 'togetherToAge', 'toAge'];
@@ -444,5 +448,7 @@
   })();
   setLens(startLens);
   fillForm();
+  // first run with no saved config (the extension) — open setup so you set your year
+  try { if (window.ANICCA_ONBOARD && !localStorage.getItem(KEY)) openPanel(); } catch (_) {}
   requestAnimationFrame((t) => { lastT = t; frame(t); });
 })();
