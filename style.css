@@ -342,8 +342,8 @@ body {
 }
 .foot a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent); pointer-events: auto; }
 .foot a:hover { opacity: 0.75; }
-/* "get it on Firefox" flame (web page only) */
-.foot__ff {
+/* footer icon links — Firefox flame, GitHub mark (web page only) */
+.foot__ico {
   display: inline-flex;
   vertical-align: -3px;
   margin-left: 0.6rem;
@@ -352,8 +352,8 @@ body {
   pointer-events: auto;
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
-.foot__ff:hover { opacity: 1; transform: translateY(-1px); }
-.foot__ff svg { display: block; }
+.foot__ico:hover { opacity: 1; transform: translateY(-1px); }
+.foot__ico svg { display: block; }
 .foot__breath {
   color: var(--accent);
   opacity: calc(0.55 + var(--breath) * 0.45);
