@@ -22,6 +22,10 @@ On the *stillness* lens, the whole page breathes.
 Open `index.html`. That's it — it's a single static page, no build step, no
 dependencies. Switch lenses with the words at the bottom (or keys `1` / `2` / `3`).
 
+Or live it in every new tab — **anicca** is on the Firefox Add-ons store:
+
+<a href="https://addons.mozilla.org/en-US/firefox/addon/anicca-new-tab/"><img alt="Get anicca for Firefox" src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" height="58"></a>
+
 ### Make it yours
 
 Hit **tune** (top-right) and edit the numbers — they recompute live, persist in
